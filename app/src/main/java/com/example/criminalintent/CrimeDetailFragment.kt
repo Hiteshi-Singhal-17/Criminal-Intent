@@ -15,8 +15,12 @@ import java.util.UUID
  */
 class CrimeDetailFragment : Fragment() {
     private lateinit var crime: Crime
-    private lateinit var binding: FragmentCrimeDetailBinding
-
+    private var _binding: FragmentCrimeDetailBinding? = null
+    // Null out references to views in onDestroyView()
+    private val binding
+        get() = checkNotNull(_binding) {
+            "Cannot access binding because it is null. Is the view visible ?"
+        }
     /**
      * Initializes the crime object.
      */
@@ -42,7 +46,7 @@ class CrimeDetailFragment : Fragment() {
     ): View {
         // Android system manages time to add fragment's view to container.
         // Activity provides the place. So passed false, to let android system manage it.
-        binding = FragmentCrimeDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentCrimeDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,7 +72,14 @@ class CrimeDetailFragment : Fragment() {
             crimeSolved.setOnCheckedChangeListener { _, isChecked ->
                 crime = crime.copy(isSolved = isChecked)
             }
-
         }
+    }
+
+    /**
+     * Destroy the view hierarchy and set null to binding object.
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
