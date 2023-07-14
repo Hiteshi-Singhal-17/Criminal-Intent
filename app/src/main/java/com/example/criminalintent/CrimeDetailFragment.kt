@@ -14,7 +14,7 @@ import java.util.UUID
  * CrimeDetailFragment is responsible for displaying the details of a specific crime.
  */
 class CrimeDetailFragment : Fragment() {
-    private lateinit var crime: Crime
+    lateinit var crime: Crime
     private var _binding: FragmentCrimeDetailBinding? = null
     // Null out references to views in onDestroyView()
     private val binding
