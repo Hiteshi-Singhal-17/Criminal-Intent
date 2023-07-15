@@ -11,14 +11,22 @@ import com.example.criminalintent.databinding.ListItemCrimeBinding
  * as argument and passing root view as argument to base view holder.
  */
 class CrimeHolder (
-    val binding: ListItemCrimeBinding
-): RecyclerView.ViewHolder(binding.root)
+    private val binding: ListItemCrimeBinding
+): RecyclerView.ViewHolder(binding.root) {
+    // Populating crime holder with the crime object data
+    fun bind(crime:Crime){
+        binding.crimeDate.text = crime.date.toString()
+        binding.crimeTitle.text = crime.title
+    }
+}
 
 class CrimeListAdapter(
     private val crimes: List<Crime>
 ) : RecyclerView.Adapter<CrimeHolder>() {
 
-    //Creating the view holder
+    /**
+     * Creating the view holder
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
         // Declaring and initializing the inflator
         val inflater = LayoutInflater.from(parent.context)
@@ -33,13 +41,13 @@ class CrimeListAdapter(
         return crimes.size
     }
 
+    /**
+     * To populate view holder with data
+     */
     override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
         // Fetching crime details at the specific position
         val crime = crimes[position]
-        // Populating holder with crime object
-        holder.apply {
-            binding.crimeDate.text = crime.date.toString()
-            binding.crimeTitle.text = crime.title
-        }
+        // Invoking bind to populate holder with crime object
+        holder.bind(crime)
     }
 }
