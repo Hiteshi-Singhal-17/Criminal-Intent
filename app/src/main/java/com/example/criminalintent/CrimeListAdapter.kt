@@ -1,6 +1,7 @@
 package com.example.criminalintent
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.databinding.ListItemCrimeBinding
@@ -14,11 +15,18 @@ class CrimeHolder (
     private val binding: ListItemCrimeBinding
 ): RecyclerView.ViewHolder(binding.root) {
     // Populating crime holder with the crime object data
-    fun bind(crime:Crime){
-        binding.crimeDate.text = crime.date.toString()
-        binding.crimeTitle.text = crime.title
+    fun bind(crime: Crime) {
+        binding.apply {
+            crimeDate.text = crime.date.toString()
+            crimeTitle.text = crime.title
+            // Handcuff image to be displayed if crime is solved.
+            crimeSolved.visibility = if (crime.isSolved)
+                View.VISIBLE
+            else View.GONE
+        }
     }
 }
+
 
 class CrimeListAdapter(
     private val crimes: List<Crime>
