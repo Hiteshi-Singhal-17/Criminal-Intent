@@ -1,6 +1,7 @@
 package com.example.criminalintent
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,8 @@ class CrimeDetailFragment : Fragment() {
         crime = Crime(
             id = UUID.randomUUID(),
             title = "",
-            date = Date(),
+            // Formatting time stamp to readable format (Wednesday, May 11, 2022)
+            date = DateFormat.format("EEEE, MMMM dd, yyyy", Date()).toString(),
             isSolved = false
         )
     }
@@ -64,7 +66,7 @@ class CrimeDetailFragment : Fragment() {
 
             // Setting text to date button
             crimeDate.apply {
-                text = crime.date.toString()
+                text = crime.date
                 isEnabled = false
             }
 
