@@ -25,7 +25,11 @@ class CrimeRepository private constructor(context: Context) {
             context.applicationContext,
             CrimeDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+        // Initialize database with pre-populated data.
+        // One time operation, if database already exists on device, won't be overwritten
+        .createFromAsset(DATABASE_NAME)
+        .build()
 
     suspend fun getCrimes(): List<Crime> = database.crimeDao().getCrimes()
     suspend fun getCrime(id:UUID) : Crime = database.crimeDao().getCrime(id)
