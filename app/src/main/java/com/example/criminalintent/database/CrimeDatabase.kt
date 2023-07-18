@@ -9,8 +9,13 @@ import com.example.criminalintent.Crime
 Database annotation -> This class represents database in application
 First parameter  -> list of entities classes
 Second parameter -> version of database
-TypeConveters -> Tell database to use the functions in class when converting date data type.
+TypeConverters -> Tell database to use the functions in class when converting date data type.
  */
 @Database(entities = [Crime::class], version = 1)
 @TypeConverters(CrimeTypeConverters::class)
-abstract class CrimeDatabase : RoomDatabase()
+abstract class CrimeDatabase : RoomDatabase() {
+    /* Hooking CrimeDao to database class lead to Room generating
+    implementations of the functions added to the interface.
+    */
+    abstract fun crimeDao(): CrimeDao
+}
