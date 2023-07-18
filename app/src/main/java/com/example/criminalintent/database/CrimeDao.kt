@@ -8,6 +8,7 @@ import java.util.UUID
 /*
 Dao is an interface that contains functions for each database operation to be performed.
 @Query -> to pull information out of the database.
+Annotation generates the implementation of classes at compile time/
  */
 @Dao
 interface CrimeDao {
