@@ -3,6 +3,7 @@ package com.example.criminalintent.database
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.criminalintent.Crime
+import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 /*
@@ -14,7 +15,7 @@ Annotation generates the implementation of classes at compile time/
 interface CrimeDao {
     // Returns a list of all crimes in the database
     @Query("Select * from Crime")
-    suspend fun getCrimes(): List<Crime>
+    fun getCrimes(): Flow<List<Crime>>
 
     // Return a single crime matching a given UUID
     @Query("Select * from Crime where id=(:id)")

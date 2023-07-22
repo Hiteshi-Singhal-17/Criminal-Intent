@@ -54,10 +54,16 @@ class CrimeListFragment : Fragment() {
             // Coroutine will be cancelled by coroutine scope only, in this case
             // viewLifecycleOwner; tied to the lifecycle of fragment's view.
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Retrieving the list of crimes from the ViewModel
-                val crimes = crimeListViewModel.loadCrimes()
-                // Set the adapter for the recycler view
-                binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes)
+                // Start collecting from the crimes StateFlow exposed by the ViewModel.
+                crimeListViewModel.crimes.collect { crimes ->
+                    // For each new list of crimes emitted by the StateFlow:
+
+                    // Create a new CrimeListAdapter with the latest list of crimes,
+                    // and set it as the adapter for the RecyclerView. This will cause
+                    // the RecyclerView to update and display the latest list of crimes.
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes)
+                }
+
             }
         }
     }
