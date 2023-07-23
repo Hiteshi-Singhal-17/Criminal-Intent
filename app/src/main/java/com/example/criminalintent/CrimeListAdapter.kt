@@ -15,7 +15,7 @@ class CrimeHolder (
     private val binding: ListItemCrimeBinding
 ): RecyclerView.ViewHolder(binding.root) {
     // Populating crime holder with the crime object data
-    fun bind(crime: Crime) {
+    fun bind(crime: Crime, onCrimeClicked: () -> Unit) {
         binding.apply {
             crimeDate.text = crime.date.toString()
             crimeTitle.text = crime.title
@@ -23,13 +23,19 @@ class CrimeHolder (
             crimeSolved.visibility = if (crime.isSolved)
                 View.VISIBLE
             else View.GONE
+
+            // When a crime is clicked.
+            root.setOnClickListener {
+                onCrimeClicked()
+            }
         }
     }
 }
 
 
 class CrimeListAdapter(
-    private val crimes: List<Crime>
+    private val crimes: List<Crime>,
+    private val onCrimeClicked: () -> Unit
 ) : RecyclerView.Adapter<CrimeHolder>() {
 
     /**
@@ -56,6 +62,6 @@ class CrimeListAdapter(
         // Fetching crime details at the specific position
         val crime = crimes[position]
         // Invoking bind to populate holder with crime object
-        holder.bind(crime)
+        holder.bind(crime, onCrimeClicked)
     }
 }

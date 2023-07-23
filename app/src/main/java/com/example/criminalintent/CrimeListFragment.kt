@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.criminalintent.databinding.FragmentCrimeListBinding
 import kotlinx.coroutines.launch
@@ -61,7 +62,11 @@ class CrimeListFragment : Fragment() {
                     // Create a new CrimeListAdapter with the latest list of crimes,
                     // and set it as the adapter for the RecyclerView. This will cause
                     // the RecyclerView to update and display the latest list of crimes.
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes)
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) {
+                        findNavController().navigate(
+                            R.id.show_crime_detail
+                        )
+                    }
                 }
 
             }
