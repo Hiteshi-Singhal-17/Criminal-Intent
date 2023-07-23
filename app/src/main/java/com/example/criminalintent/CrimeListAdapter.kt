@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.criminalintent.databinding.ListItemCrimeBinding
+import java.util.UUID
 
 /**
  * Crime holder class extending recycler view's
@@ -15,7 +16,7 @@ class CrimeHolder (
     private val binding: ListItemCrimeBinding
 ): RecyclerView.ViewHolder(binding.root) {
     // Populating crime holder with the crime object data
-    fun bind(crime: Crime, onCrimeClicked: () -> Unit) {
+    fun bind(crime: Crime, onCrimeClicked: (crimeId : UUID) -> Unit) {
         binding.apply {
             crimeDate.text = crime.date.toString()
             crimeTitle.text = crime.title
@@ -26,7 +27,7 @@ class CrimeHolder (
 
             // When a crime is clicked.
             root.setOnClickListener {
-                onCrimeClicked()
+                onCrimeClicked(crime.id)
             }
         }
     }
@@ -35,7 +36,7 @@ class CrimeHolder (
 
 class CrimeListAdapter(
     private val crimes: List<Crime>,
-    private val onCrimeClicked: () -> Unit
+    private val onCrimeClicked: (crimeId: UUID) -> Unit
 ) : RecyclerView.Adapter<CrimeHolder>() {
 
     /**

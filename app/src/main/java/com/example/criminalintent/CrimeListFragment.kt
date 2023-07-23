@@ -62,9 +62,9 @@ class CrimeListFragment : Fragment() {
                     // Create a new CrimeListAdapter with the latest list of crimes,
                     // and set it as the adapter for the RecyclerView. This will cause
                     // the RecyclerView to update and display the latest list of crimes.
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) {
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimes) { crimeId ->
                         findNavController().navigate(
-                            R.id.show_crime_detail
+                            CrimeListFragmentDirections.showCrimeDetail(crimeId)
                         )
                     }
                 }

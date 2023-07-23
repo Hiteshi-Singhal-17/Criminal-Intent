@@ -1,11 +1,13 @@
 package com.example.criminalintent
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.example.criminalintent.databinding.FragmentCrimeDetailBinding
 import java.util.Date
 import java.util.UUID
@@ -13,8 +15,10 @@ import java.util.UUID
 /**
  * CrimeDetailFragment is responsible for displaying the details of a specific crime.
  */
+private const val TAG = "CrimeDetailFragment"
 class CrimeDetailFragment : Fragment() {
     private lateinit var crime: Crime
+    private val args: CrimeDetailFragmentArgs by navArgs()
     private var _binding: FragmentCrimeDetailBinding? = null
     // Null out references to views in onDestroyView()
     private val binding
@@ -33,6 +37,8 @@ class CrimeDetailFragment : Fragment() {
             date = Date(),
             isSolved = false
         )
+
+        Log.d(TAG,"The crime is ${args.crimeId}")
     }
 
     /**
