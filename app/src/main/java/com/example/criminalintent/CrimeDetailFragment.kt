@@ -1,45 +1,38 @@
 package com.example.criminalintent
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.example.criminalintent.databinding.FragmentCrimeDetailBinding
-import java.util.Date
-import java.util.UUID
+import kotlinx.coroutines.launch
 
 /**
  * CrimeDetailFragment is responsible for displaying the details of a specific crime.
  */
-private const val TAG = "CrimeDetailFragment"
 class CrimeDetailFragment : Fragment() {
-    private lateinit var crime: Crime
     private val args: CrimeDetailFragmentArgs by navArgs()
     private var _binding: FragmentCrimeDetailBinding? = null
+
+    // Creating the instance of CrimeDetailViewModel
+    private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
+        // Returns an instance of CrimeDetailViewModelFactory with a specific crimeId as the argument
+        // Custom factory is used because viewModel requires parameter.
+        CrimeDetailViewModel.CrimeDetailViewModelFactory(args.crimeId)
+    }
+
     // Null out references to views in onDestroyView()
     private val binding
         get() = checkNotNull(_binding) {
             "Cannot access binding because it is null. Is the view visible ?"
         }
-    /**
-     * Initializes the crime object.
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        crime = Crime(
-            id = UUID.randomUUID(),
-            title = "",
-            date = Date(),
-            isSolved = false
-        )
-
-        Log.d(TAG,"The crime is ${args.crimeId}")
-    }
 
     /**
      * Inflates the fragment's layout which includes all the necessary views
@@ -65,18 +58,37 @@ class CrimeDetailFragment : Fragment() {
         binding.apply {
             // Setting listeners to crime title box
             crimeTitle.doOnTextChanged { text, _, _, _ ->
-                crime = crime.copy(title = text.toString())
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(title = text.toString())
+                }
             }
 
             // Setting text to date button
             crimeDate.apply {
-                text = crime.date.toString()
                 isEnabled = false
             }
 
             // Setting listener to crime solved checkbox
             crimeSolved.setOnCheckedChangeListener { _, isChecked ->
-                crime = crime.copy(isSolved = isChecked)
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(isSolved = isChecked)
+                }
+            }
+        }
+        // Coroutine is launched in the lifecycle scope of the viewLifeCycleOwner
+        // coroutine will be cancelled when the viewLifeCycleOwner is destroyed.
+        viewLifecycleOwner.lifecycleScope.launch {
+            // The block of code will run and re-run everytime the lifecycle of
+            // viewLifeCycleOwner reaches the 'Started' state
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // The code is collecting values from the crime StateFlow in the crimeDetailViewModel.
+                // Each time the crime object changes, the code block inside
+                // 'collect {}' will run
+                crimeDetailViewModel.crime.collect { crime ->
+                    // For each collected crime, if crime is not null,
+                    // the updateUi(it) function is called with crime as the parameter.
+                    crime?.let { updateUi(it) }
+                }
             }
         }
     }
@@ -87,5 +99,15 @@ class CrimeDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateUi(crime: Crime) {
+        binding.apply {
+            if (crimeTitle.text.toString() != crime.title)
+                crimeTitle.setText(crime.title)
+
+            crimeDate.text = crime.date.toString()
+            crimeSolved.isChecked = crime.isSolved
+        }
     }
 }
