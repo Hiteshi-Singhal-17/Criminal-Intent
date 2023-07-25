@@ -35,6 +35,12 @@ class CrimeDetailViewModel(crimeId: UUID) : ViewModel(){
         }
     }
 
+    // To save changes to the database
+    override fun onCleared() {
+        super.onCleared()
+        crime.value?.let { crimeRepository.updateCrime(it) }
+    }
+
     /*
     FYI, the ViewModel instances are created by a factory class.
     By default, ViewModel uses a no-argument constructor.

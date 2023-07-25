@@ -3,7 +3,10 @@ package com.example.criminalintent.database
 import android.content.Context
 import androidx.room.Room
 import com.example.criminalintent.Crime
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 /*
@@ -18,7 +21,10 @@ It exists as long as application stays in memory.
  */
 private const val DATABASE_NAME = "crime-database"
 
-class CrimeRepository private constructor(context: Context) {
+class CrimeRepository private constructor(
+    context: Context,
+    private val coroutineScope: CoroutineScope = GlobalScope
+    ) {
     // Storing the reference of database.
     // Room.databaseBuilder(...) creates the concrete implementation of abstract CrimeDatabase class.
     private val database: CrimeDatabase = Room
@@ -43,6 +49,13 @@ class CrimeRepository private constructor(context: Context) {
         database.crimeDao().getCrimes()
 
     suspend fun getCrime(id:UUID) : Crime = database.crimeDao().getCrime(id)
+
+    // To update the existing crime in database
+     fun updateCrime(crime: Crime) {
+        coroutineScope.launch {
+            database.crimeDao().updateCrime(crime)
+        }
+    }
 
 
     companion object {

@@ -2,6 +2,7 @@ package com.example.criminalintent.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
 import com.example.criminalintent.Crime
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
@@ -20,4 +21,8 @@ interface CrimeDao {
     // Return a single crime matching a given UUID
     @Query("Select * from Crime where id=(:id)")
     suspend fun getCrime(id: UUID): Crime
+
+    // To update the existing crime in database
+    @Update
+    suspend fun updateCrime(crime: Crime)
 }
