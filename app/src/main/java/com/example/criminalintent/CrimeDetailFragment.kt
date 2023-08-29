@@ -103,6 +103,9 @@ class CrimeDetailFragment : Fragment() {
 
     private fun updateUi(crime: Crime) {
         binding.apply {
+            // To prevent placing the cursor at the beginning of the text
+            // after every keystroke. The below statement will only be executed
+            // if there is any change from the source i.e database not from the user.
             if (crimeTitle.text.toString() != crime.title)
                 crimeTitle.setText(crime.title)
 
