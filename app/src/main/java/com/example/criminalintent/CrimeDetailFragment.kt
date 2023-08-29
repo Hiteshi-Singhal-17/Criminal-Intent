@@ -110,7 +110,9 @@ class CrimeDetailFragment : Fragment() {
             // to DatePickerDialogFragment.
             crimeDate.setOnClickListener {
                 findNavController().navigate(
-                    CrimeDetailFragmentDirections.selectDate()
+                    // Passing the crime date from crimeDetailFragment to
+                    // DialogFragment.
+                    CrimeDetailFragmentDirections.selectDate(crime.date)
                 )
             }
             crimeSolved.isChecked = crime.isSolved
